@@ -97,6 +97,57 @@ public class PositiveNewsController {
     }
 
     /**
+     * GET /api/positive-news
+     * 전체 긍정 뉴스 목록 (전역, 페이지네이션 + 필터)
+     */
+    @GetMapping
+    public ResponseEntity<Page<PositiveNews>> getAllNews(
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PositiveNews> news;
+
+        if (year != null && category != null && !category.equals("all")) {
+            news = positiveNewsRepository.findByYearAndCategory(year, category, pageable);
+        } else if (year != null) {
+            news = positiveNewsRepository.findByYear(year, pageable);
+        } else if (category != null && !category.equals("all")) {
+            news = positiveNewsRepository.findByCategoryOrderByPublishedDateDesc(category, pageable);
+        } else {
+            // Default: findAll sorted by id/date? findAll doesn't guarantee order usually.
+            // Let's use sorting in pageable
+            pageable = PageRequest.of(page, size, org.springframework.data.domain.Sort.by("publishedDate").descending());
+            news = positiveNewsRepository.findAll(pageable);
+        }
+
+        log.info("📰 전체 뉴스 조회: {} 건 (year: {}, cat: {})", news.getTotalElements(), year, category);
+        return ResponseEntity.ok(news);
+    }
+
+    /**
+     * GET /api/positive-news/stats/by-year
+     * 전역 연도별 뉴스 개수 통계
+     */
+    @GetMapping("/stats/by-year")
+    public ResponseEntity<List<Map<String, Object>>> getGlobalYearlyStats() {
+        List<Map<String, Object>> stats = positiveNewsRepository.countGroupByYear();
+        return ResponseEntity.ok(stats);
+    }
+
+    /**
+     * GET /api/positive-news/stats/by-category
+     * 전역 카테고리별 뉴스 개수 통계
+     */
+    @GetMapping("/stats/by-category")
+    public ResponseEntity<List<Map<String, Object>>> getGlobalCategoryStats() {
+        List<Map<String, Object>> stats = positiveNewsRepository.countGroupByCategory();
+        return ResponseEntity.ok(stats);
+    }
+
+    /**
      * GET /api/positive-news/organization/{orgId}
      * 특정 조직의 긍정 뉴스 목록 (페이지네이션 + 필터)
      */

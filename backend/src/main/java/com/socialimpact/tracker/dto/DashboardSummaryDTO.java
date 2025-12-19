@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DashboardSummaryDTO {
+    private Long organizationsCount;
+    private Long newsCount;
     private BigDecimal totalCo2Reduced;
     private BigDecimal totalVolunteerHours;
     private BigDecimal totalDonation;

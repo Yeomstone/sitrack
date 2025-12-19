@@ -24,4 +24,10 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
 
     @Query("SELECT d FROM Donation d WHERE d.year BETWEEN :startYear AND :endYear")
     List<Donation> findByYearRange(Integer startYear, Integer endYear);
+
+    /**
+     * 전체 기부금 합계 (대시보드용)
+     */
+    @Query("SELECT SUM(d.donationAmount) FROM Donation d")
+    java.math.BigDecimal sumDonationAmount();
 }

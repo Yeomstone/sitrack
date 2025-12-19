@@ -181,4 +181,44 @@ public interface PositiveNewsRepository extends JpaRepository<PositiveNews, Long
     long countByOrganizationAndDateRange(@Param("orgId") Long orgId,
                                          @Param("startDate") java.time.LocalDate startDate,
                                          @Param("endDate") java.time.LocalDate endDate);
+
+    // ==================== 전역(Global) 필터링 조회 ====================
+
+    /**
+     * 전역: 특정 연도 뉴스
+     */
+    @Query("SELECT p FROM PositiveNews p WHERE YEAR(p.publishedDate) = :year ORDER BY p.publishedDate DESC")
+    Page<PositiveNews> findByYear(@Param("year") Integer year, Pageable pageable);
+
+    /**
+     * 전역: 특정 카테고리 뉴스
+     */
+    Page<PositiveNews> findByCategoryOrderByPublishedDateDesc(String category, Pageable pageable);
+
+    /**
+     * 전역: 특정 연도 + 카테고리 뉴스
+     */
+    @Query("SELECT p FROM PositiveNews p WHERE YEAR(p.publishedDate) = :year AND p.category = :category " +
+            "ORDER BY p.publishedDate DESC")
+    Page<PositiveNews> findByYearAndCategory(@Param("year") Integer year,
+                                             @Param("category") String category,
+                                             Pageable pageable);
+
+    // ==================== 전역(Global) 통계 ====================
+
+    /**
+     * 전역: 연도별 뉴스 개수 통계
+     */
+    @Query("SELECT YEAR(p.publishedDate) as year, COUNT(p) as count " +
+            "FROM PositiveNews p " +
+            "GROUP BY YEAR(p.publishedDate) ORDER BY year DESC")
+    List<Map<String, Object>> countGroupByYear();
+
+    /**
+     * 전역: 카테고리별 뉴스 개수 통계
+     */
+    @Query("SELECT p.category as category, COUNT(p) as count " +
+            "FROM PositiveNews p " +
+            "GROUP BY p.category ORDER BY count DESC")
+    List<Map<String, Object>> countGroupByCategory();
 }

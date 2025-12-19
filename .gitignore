@@ -1,0 +1,39 @@
+# Logs
+*.log
+hs_err_pid*.log
+replay_pid*.log
+
+# Build outputs
+build/
+bin/
+out/
+target/
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# Gradle
+.gradle/
+gradle/wrapper/
+
+# Node
+node_modules/
+dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp
+*.tmp
+*.temp

@@ -3,10 +3,8 @@ package com.socialimpact.tracker.service;
 import com.socialimpact.tracker.dto.*;
 import com.socialimpact.tracker.entity.KpiReport;
 import com.socialimpact.tracker.entity.KpiReport.ReportStatus;
-import com.socialimpact.tracker.repository.DonationRepository;
-import com.socialimpact.tracker.repository.KpiReportRepository;
+import com.socialimpact.tracker.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,22 +21,31 @@ import java.util.stream.Collectors;
 public class DashboardService {
 
     private final KpiReportRepository kpiReportRepository;
+    private final OrganizationRepository organizationRepository;
+    private final PositiveNewsRepository positiveNewsRepository;
+    private final DonationRepository donationRepository;
+    private final EmissionRepository emissionRepository;
 
     /**
-     * 대시보드 전체 요약 데이터 조회
+     * 대시보드 전체 요약 데이터 조회 (최적화 버전)
      */
-    @Autowired
-    private DonationRepository donationRepository; // ← 추가
-
     public DashboardSummaryDTO getDashboardSummary() {
-        List<KpiReport> approvedReports = kpiReportRepository.findByStatus(ReportStatus.APPROVED);
+        // 실제 엔티티 count 조회
+        Long organizationsCount = organizationRepository.count();
+        Long newsCount = positiveNewsRepository.count();
+        
+        // 집계 데이터 조회
+        BigDecimal totalCo2 = emissionRepository.sumTotalEmissions();
+        BigDecimal totalDonation = donationRepository.sumDonationAmount();
 
-        BigDecimal totalCo2 = sumByKpiName(approvedReports, "CO2 Emission Reduced");
-        BigDecimal totalVolunteerHours = sumByKpiName(approvedReports, "Volunteer Hours");
-        BigDecimal totalDonation = sumByKpiName(approvedReports, "Donation Amount");
-        Long totalPeopleServed = sumByKpiName(approvedReports, "People Served").longValue();
-
-        return new DashboardSummaryDTO(totalCo2, totalVolunteerHours, totalDonation, totalPeopleServed);
+        return new DashboardSummaryDTO(
+            organizationsCount,
+            newsCount,
+            totalCo2 != null ? totalCo2 : BigDecimal.ZERO,
+            BigDecimal.ZERO,  // volunteerHours - 별도 테이블 없음
+            totalDonation != null ? totalDonation : BigDecimal.ZERO,
+            0L  // peopleServed - 별도 테이블 없음
+        );
     }
 
     /**

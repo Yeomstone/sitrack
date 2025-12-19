@@ -99,4 +99,10 @@ public interface EmissionRepository extends JpaRepository<Emission, Long> {
             @Param("fromYear") Integer fromYear,
             @Param("toYear") Integer toYear
     );
+
+    /**
+     * 전체 배출량 합계 (대시보드용)
+     */
+    @Query("SELECT SUM(e.totalEmissions) FROM Emission e")
+    java.math.BigDecimal sumTotalEmissions();
 }
