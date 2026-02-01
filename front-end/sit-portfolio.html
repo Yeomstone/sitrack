@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Impact Tracker - 포트폴리오</title>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+    <style>
+        @page { size: 1280px 720px; margin: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            background: #f5f5f5;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            margin: 0 auto;
+            background: #fff;
+            position: relative;
+            page-break-after: always;
+        }
+
+        .slide-num {
+            position: absolute;
+            bottom: 30px;
+            right: 50px;
+            font-size: 11px;
+            color: #aaa;
+            font-weight: 500;
+        }
+
+        /* 표지 */
+        .cover {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .cover-content {
+            width: 100%;
+            max-width: 800px;
+        }
+        .cover h1 {
+            font-size: 58px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+        .cover .sub {
+            font-size: 24px;
+            color: rgba(255,255,255,0.7);
+            font-weight: 400;
+            margin-bottom: 60px;
+        }
+        .cover .meta {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            font-size: 15px;
+            color: rgba(255,255,255,0.5);
+        }
+        .cover .meta span { display: flex; flex-direction: column; gap: 6px; }
+        .cover .meta .label { font-size: 13px; }
+        .cover .meta .value { color: #fff; font-weight: 600; font-size: 17px; }
+        .cover .slide-num { color: rgba(255,255,255,0.3); }
+
+        /* 헤더 */
+        .header {
+            padding: 50px 80px 0;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .header .num {
+            width: 36px;
+            height: 36px;
+            background: #1e293b;
+            color: #fff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 700;
+        }
+        .header h2 {
+            font-size: 30px;
+            font-weight: 700;
+            color: #1e293b;
+            letter-spacing: -0.5px;
+        }
+
+        /* 본문 */
+        .body {
+            padding: 30px 80px 50px;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+        .body.single { 
+            grid-template-columns: 1fr;
+        }
+        .body.equal {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .section {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        p {
+            font-size: 14.5px;
+            line-height: 1.8;
+            color: #475569;
+        }
+
+        ul {
+            list-style: none;
+        }
+        ul li {
+            font-size: 14.5px;
+            color: #475569;
+            padding: 8px 0 8px 20px;
+            position: relative;
+            line-height: 1.7;
+        }
+        ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #1e293b;
+            font-weight: 700;
+        }
+
+        /* 박스 */
+        .box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 28px;
+        }
+        .box h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 18px;
+        }
+        .box p {
+            font-size: 14px;
+            line-height: 1.75;
+            margin-bottom: 14px;
+        }
+        .box p:last-child { margin-bottom: 0; }
+
+        /* 태그 */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .tag {
+            background: #1e293b;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 7px;
+        }
+
+        /* 테이블 */
+        .table {
+            width: 100%;
+        }
+        .table tr {
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .table tr:last-child { border-bottom: none; }
+        .table td {
+            padding: 12px 0;
+            font-size: 14px;
+            color: #64748b;
+        }
+        .table td:first-child {
+            font-weight: 600;
+            color: #1e293b;
+            width: 120px;
+        }
+
+        /* 아키텍처 */
+        .arch {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        .arch-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px 32px;
+            text-align: center;
+            min-width: 130px;
+        }
+        .arch-item .icon { font-size: 32px; margin-bottom: 10px; }
+        .arch-item .name { font-size: 14px; font-weight: 700; color: #1e293b; }
+        .arch-item .sub { font-size: 11.5px; color: #94a3b8; margin-top: 6px; }
+        .arch-arrow { font-size: 22px; color: #cbd5e1; }
+
+        /* 카드 그리드 */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 11px;
+            padding: 22px;
+        }
+        .card h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        .card p {
+            font-size: 12.5px;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* 통계 */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+        .stat {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 11px;
+            padding: 22px;
+            text-align: center;
+        }
+        .stat .num {
+            font-size: 36px;
+            font-weight: 800;
+            color: #1e293b;
+        }
+        .stat .label {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 6px;
+        }
+
+        /* 링크 */
+        .link-box {
+            background: #1e293b;
+            border-radius: 14px;
+            padding: 45px;
+            text-align: center;
+        }
+        .link-box .label {
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 10px;
+        }
+        .link-box .url {
+            font-size: 30px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+        }
+        .link-box .hint {
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 14px;
+        }
+
+        /* 하이라이트 */
+        .highlight {
+            background: #eff6ff;
+            border-left: 3px solid #3b82f6;
+            padding: 16px 20px;
+            margin: 16px 0;
+            border-radius: 6px;
+        }
+        .highlight p {
+            font-size: 14px;
+            color: #1e40af;
+            margin: 0;
+        }
+
+        @media print { .slide { margin: 0; } }
+    </style>
+</head>
+<body>
+
+<!-- 1. 표지 -->
+<div class="slide cover">
+    <div class="cover-content">
+        <h1>Social Impact Tracker</h1>
+        <p class="sub">기업 ESG 데이터 시각화 플랫폼</p>
+        <div class="meta">
+            <span>
+                <div class="label">역할</div>
+                <div class="value">Full-Stack</div>
+            </span>
+            <span>
+                <div class="label">기간</div>
+                <div class="value">2개월</div>
+            </span>
+            <span>
+                <div class="label">유형</div>
+                <div class="value">개인 프로젝트</div>
+            </span>
+        </div>
+    </div>
+    <span class="slide-num">1 / 7</span>
+</div>
+
+<!-- 2. 프로젝트 배경 -->
+<div class="slide">
+    <div class="header">
+        <span class="num">01</span>
+        <h2>프로젝트 배경</h2>
+    </div>
+    <div class="body">
+        <div class="section">
+            <div>
+                <h3>발견한 문제</h3>
+                <p>ESG 경영이 화두가 되면서 기업들의 사회공헌 데이터는 넘쳐났습니다. 하지만 데이터들은 공시자료, 지속가능경영보고서, 뉴스 기사 등에 흩어져 있어 한눈에 비교하기 어려웠습니다.</p>
+            </div>
+            
+            <div>
+                <h3>프로젝트 목표</h3>
+                <ul>
+                    <li>금융감독원, 네이버뉴스 등 흩어진 ESG 데이터를 한곳에 자동 수집</li>
+                    <li>기업 간 ESG 성과를 한눈에 비교할 수 있는 대시보드 구축</li>
+                    <li>긍정적 ESG 활동 뉴스만 선별하여 자동 분류 및 제공</li>
+                    <li>시각화 차트로 연도별 트렌드 및 기업 간 비교 분석 지원</li>
+                </ul>
+            </div>
+
+            <div class="highlight">
+                <p><strong>핵심 가치:</strong> 투명한 ESG 정보 공개를 통한 기업의 사회적 책임 가시화</p>
+            </div>
+        </div>
+        
+        <div class="box">
+            <h4>데이터 소스</h4>
+            <p><strong>OpenDart API</strong><br>금융감독원 전자공시시스템의 기업 공시 데이터<br>• 기업별 온실가스 배출량<br>• 사회공헌 기부금 내역</p>
+            <p style="margin-top:20px;"><strong>Naver News API</strong><br>기업별 ESG 키워드 뉴스 수집<br>• 부정 키워드 자동 필터링<br>• 긍정적 활동만 선별 표시</p>
+        </div>
+    </div>
+    <span class="slide-num">2 / 7</span>
+</div>
+
+<!-- 3. 기술 스택 -->
+<div class="slide">
+    <div class="header">
+        <span class="num">02</span>
+        <h2>기술 스택 및 구현</h2>
+    </div>
+    <div class="body">
+        <div class="section">
+            <div>
+                <h3>Backend 아키텍처</h3>
+                <p>Spring Boot 3.2로 RESTful API를 설계하고, WebClient를 활용해 외부 API(OpenDart, Naver)에서 비동기로 데이터를 수집했습니다. JPA로 MySQL 데이터베이스와 연동하여 기업 정보, 배출량, 기부금, 뉴스 데이터를 효율적으로 관리합니다.</p>
+            </div>
+            
+            <div>
+                <h3>Frontend 구현</h3>
+                <p>React 18 + Vite로 SPA(Single Page Application)를 구축했습니다. Recharts 라이브러리를 활용해 연도별 배출량 트렌드, 기업 간 기부금 비교 등을 인터랙티브한 차트로 시각화했습니다.</p>
+            </div>
+            
+            <div>
+                <h3>배포 및 인프라</h3>
+                <p>백엔드는 Railway에 Docker로 배포하여 자동 재시작 및 로그 모니터링을 설정했습니다. 프론트엔드는 Netlify의 CDN을 통해 전 세계 어디서든 빠른 속도로 접속 가능하도록 구성했습니다.</p>
+            </div>
+        </div>
+        
+        <div class="box">
+            <h4>사용 기술 스택</h4>
+            <div class="tags">
+                <span class="tag">Java 17</span>
+                <span class="tag">Spring Boot 3.2</span>
+                <span class="tag">Spring Data JPA</span>
+                <span class="tag">WebClient</span>
+                <span class="tag">React 18</span>
+                <span class="tag">Vite</span>
+                <span class="tag">Recharts</span>
+                <span class="tag">MySQL 8.0</span>
+                <span class="tag">Railway</span>
+                <span class="tag">Netlify</span>
+            </div>
+        </div>
+    </div>
+    <span class="slide-num">3 / 7</span>
+</div>
+
+<!-- 4. 주요 기능 -->
+<div class="slide">
+    <div class="header">
+        <span class="num">03</span>
+        <h2>주요 기능 및 특징</h2>
+    </div>
+    <div class="body equal">
+        <div class="section">
+            <div>
+                <h3>통합 대시보드</h3>
+                <p>등록 기업 수, 수집된 뉴스 수, 총 기부금, 평균 배출량 등 핵심 KPI 지표를 한 화면에서 확인할 수 있습니다. 실시간으로 업데이트되는 데이터를 통해 ESG 트렌드를 파악할 수 있습니다.</p>
+            </div>
+            
+            <div>
+                <h3>긍정 뉴스 자동 수집</h3>
+                <p>Naver News API를 통해 기업별 ESG 관련 뉴스를 자동으로 수집합니다. "논란", "비판", "문제" 등 부정적 키워드를 필터링하여 기업의 긍정적 사회공헌 활동만 사용자에게 제공합니다.</p>
+            </div>
+            
+            <div>
+                <h3>데이터 시각화</h3>
+                <p>Recharts로 구현한 인터랙티브 차트를 통해 연도별 온실가스 배출량 변화, 기업 간 기부금 비교, 카테고리별 뉴스 분포 등을 직관적으로 확인할 수 있습니다.</p>
+            </div>
+
+            <div>
+                <h3>기업 검색 및 상세</h3>
+                <p>실시간 검색으로 원하는 기업을 빠르게 찾고, 해당 기업의 상세 ESG 데이터(배출량, 기부금, 관련 뉴스)를 한 페이지에서 확인할 수 있습니다.</p>
+            </div>
+        </div>
+        
+        <div class="box">
+            <h4>구현된 기능 목록</h4>
+            <table class="table">
+                <tr><td>대시보드</td><td>KPI 통계 요약</td></tr>
+                <tr><td>긍정 뉴스</td><td>자동 수집 + 키워드 필터링</td></tr>
+                <tr><td>배출량 관리</td><td>온실가스 연도별 트렌드</td></tr>
+                <tr><td>기부금 관리</td><td>사회공헌 금액 비교</td></tr>
+                <tr><td>기업 관리</td><td>검색 + 상세 정보</td></tr>
+                <tr><td>차트 시각화</td><td>Recharts 인터랙티브 그래프</td></tr>
+            </table>
+        </div>
+    </div>
+    <span class="slide-num">4 / 7</span>
+</div>
+
+<!-- 5. 시스템 구성 -->
+<div class="slide">
+    <div class="header">
+        <span class="num">04</span>
+        <h2>시스템 아키텍처</h2>
+    </div>
+    <div class="body single">
+        <div>
+            <div class="arch">
+                <div class="arch-item">
+                    <div class="icon">⚛️</div>
+                    <div class="name">React</div>
+                    <div class="sub">Netlify CDN</div>
+                </div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-item">
+                    <div class="icon">🍃</div>
+                    <div class="name">Spring Boot</div>
+                    <div class="sub">Railway Docker</div>
+                </div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-item">
+                    <div class="icon">🐬</div>
+                    <div class="name">MySQL</div>
+                    <div class="sub">Railway DB</div>
+                </div>
+                <span class="arch-arrow">←</span>
+                <div class="arch-item">
+                    <div class="icon">🌐</div>
+                    <div class="name">외부 API</div>
+                    <div class="sub">Dart, Naver</div>
+                </div>
+            </div>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h4>Frontend</h4>
+                    <p>• React 18 + Vite<br>• Netlify CDN 배포<br>• 커스텀 도메인 연결<br>• 반응형 디자인</p>
+                </div>
+                <div class="card">
+                    <h4>Backend</h4>
+                    <p>• Spring Boot 3.2<br>• Railway Docker 배포<br>• REST API 15+ 엔드포인트<br>• 자동 재시작 설정</p>
+                </div>
+                <div class="card">
+                    <h4>Database</h4>
+                    <p>• MySQL 8.0<br>• 6개 테이블 구조<br>• JPA Auditing<br>• 인덱스 최적화</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span class="slide-num">5 / 7</span>
+</div>
+
+<!-- 6. 데이터 파이프라인 -->
+<div class="slide">
+    <div class="header">
+        <span class="num">05</span>
+        <h2>데이터 파이프라인 구축 경험</h2>
+    </div>
+    <div class="body">
+        <div class="section">
+            <div>
+                <h3>마주한 기술적 어려움</h3>
+                <p>수만 건에 달하는 기업 공시 데이터와 뉴스를 효율적으로 수집해야 했습니다. 외부 API는 호출 횟수 제한(rate limit)이 있었고, 네트워크 불안정으로 인해 간헐적으로 응답이 늦어지거나 실패하는 문제가 발생했습니다.</p>
+            </div>
+            
+            <div>
+                <h3>해결 과정 및 구현</h3>
+                <p>WebClient의 retry() 메서드를 활용해 요청 실패 시 자동으로 재시도하는 <strong>Retry 로직</strong>을 구현했습니다. 지수 백오프(exponential backoff) 방식을 적용하여 서버 부하를 최소화하면서도 안정적으로 데이터를 수집할 수 있었습니다.</p>
+                <p style="margin-top:16px;">수집한 원본 데이터에서 중복 제거, NULL 처리, 포맷 변환 등의 정제 과정을 거쳐 깨끗한 데이터만 MySQL에 저장하는 <strong>데이터 파이프라인</strong>을 구축했습니다.</p>
+            </div>
+            
+            <div>
+                <h3>뉴스 필터링 로직</h3>
+                <p>단순 기업 소식이 아닌 ESG 관련 활동만 선별하기 위해 키워드 매칭 알고리즘을 설계했습니다. "기부", "봉사", "친환경" 등의 긍정 키워드는 포함하고, "논란", "비판", "문제" 등의 부정 키워드는 필터링하여 정확도를 높였습니다.</p>
+            </div>
+        </div>
+        
+        <div class="box">
+            <h4>배운 점 및 성장</h4>
+            <p><strong>데이터 수집 자동화</strong><br>Spring WebClient로 비동기 API 호출을 구현하고, Retry 로직과 에러 핸들링을 적용하여 안정적인 데이터 수집 환경을 만들었습니다.</p>
+            <p style="margin-top:18px;"><strong>데이터 정제 및 품질 관리</strong><br>원본 데이터에서 노이즈를 제거하고, 의미 있는 정보만 추출하는 ETL 프로세스를 경험했습니다.</p>
+            <p style="margin-top:18px;"><strong>파이프라인 설계 사고</strong><br>수집 → 정제 → 저장의 일련의 흐름을 체계적으로 설계하고 최적화하는 능력을 키웠습니다.</p>
+        </div>
+    </div>
+    <span class="slide-num">6 / 7</span>
+</div>
+
+<!-- 7. 완성된 서비스 -->
+<div class="slide">
+    <div class="header">
+        <span class="num">06</span>
+        <h2>완성된 서비스 및 성과</h2>
+    </div>
+    <div class="body equal">
+        <div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="num">10+</div>
+                    <div class="label">React 페이지</div>
+                </div>
+                <div class="stat">
+                    <div class="num">15+</div>
+                    <div class="label">API 엔드포인트</div>
+                </div>
+                <div class="stat">
+                    <div class="num">6</div>
+                    <div class="label">DB 테이블</div>
+                </div>
+                <div class="stat">
+                    <div class="num">2</div>
+                    <div class="label">외부 API 연동</div>
+                </div>
+            </div>
+            
+            <div>
+                <h3>주요 성과</h3>
+                <ul>
+                    <li>Full-Stack 개발 경험 (React + Spring Boot)</li>
+                    <li>외부 API 연동 및 비동기 데이터 수집 파이프라인 구축</li>
+                    <li>클라우드 배포 (Railway, Netlify) 및 CI/CD 경험</li>
+                    <li>데이터 시각화 (Recharts) 및 UX 설계</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h3>사용 기술</h3>
+                <div class="tags">
+                    <span class="tag">Spring Boot</span>
+                    <span class="tag">React</span>
+                    <span class="tag">MySQL</span>
+                    <span class="tag">Railway</span>
+                    <span class="tag">Netlify</span>
+                    <span class="tag">OpenDart API</span>
+                    <span class="tag">Naver News API</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="link-box">
+            <p class="label">서비스 바로가기</p>
+            <a href="https://sitrack.site" target="_blank" class="url">sitrack.site</a>
+            <p class="hint">클릭해서 직접 확인해보세요</p>
+        </div>
+    </div>
+    <span class="slide-num">7 / 7</span>
+</div>
+
+</body>
+</html>

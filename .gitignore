@@ -37,3 +37,9 @@ Thumbs.db
 # Temp
 *.tmp
 *.temp
+
+# Project Specific
+chatbot/
+sit-react-portfolio/
+hs_err_pid*.log
+replay_pid*.log
